@@ -10,25 +10,29 @@ namespace CalculationModule
         public string SecondOperand { get; set; } = string.Empty;
         public string Operation { get; set; } = string.Empty;
         public string Result { get; protected set; } = string.Empty;
-
+        private bool isAtomar;
         public Calculations() { }
         public Calculations(string firstOperand, string secondOperand, string operation) 
         {
-            CheckOperand(firstOperand);
-            CheckOperand(secondOperand);
             CheckOperation(operation);
+            CheckOperand(firstOperand);
+            if (!isAtomar) CheckOperand(secondOperand);
+          
+            
 
             FirstOperand = firstOperand;
-            SecondOperand = secondOperand;
+            if (!isAtomar) SecondOperand = secondOperand;
             Operation = operation;
         }
 
         public virtual void Calculate()
         {
-            CheckOperand(FirstOperand);
-            CheckOperand(SecondOperand);
             CheckOperation(Operation);
-     
+            CheckOperand(FirstOperand);
+            if(!isAtomar) CheckOperand(SecondOperand);
+
+
+
             try
             {
                 switch (Operation)
@@ -52,6 +56,15 @@ namespace CalculationModule
 
                         Result = (Convert.ToDouble(FirstOperand) + secondOperand).ToString();
                         break;
+                    case "sqrt":
+                        Double firstOperand = Convert.ToDouble(FirstOperand);
+                        if (firstOperand < 0)
+                        {
+                            Result = "Error: Bad argument(<0)";
+                            throw new ArgumentException();
+                        }
+                        Result = Math.Sqrt(firstOperand).ToString();
+                        break;
                 }
             }
             catch
@@ -68,6 +81,10 @@ namespace CalculationModule
                 case "-":
                 case "*":
                 case "/":
+                    isAtomar = false;
+                    break;
+                case "sqrt":
+                    isAtomar = true;
                     break;
                 default:
                     Result = "Operation Error";
