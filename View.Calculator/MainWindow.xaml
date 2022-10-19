@@ -6,7 +6,9 @@
         xmlns:local="clr-namespace:View.Calculator"
         xmlns:vm="clr-namespace:ViewModels;assembly=ViewModels"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Calculator" 
+        Height="350" Width="600" ResizeMode="CanMinimize"
+        Background="LightBlue" FontWeight="Bold">
     <Window.DataContext>
         <vm:MainViewModel />
     </Window.DataContext>
@@ -25,9 +27,50 @@
             <RowDefinition/>
             <RowDefinition/>
             <RowDefinition/>
-            <RowDefinition/>
         </Grid.RowDefinitions>
-        <TextBlock Grid.ColumnSpan="5" Text="{Binding Display}"/>
-        <Button Grid.Row="1" Style="{StaticResource DigitBtn}"/>
+        <TextBlock Grid.ColumnSpan="3" Text="{Binding Display}"
+                   FontSize="14" Background="White" Margin="4,20,10,0" TextAlignment="Right" VerticalAlignment="Top"/>
+        <TextBlock Grid.Row="1" Grid.ColumnSpan="3" Text="{Binding Info}" 
+                   FontSize="14" Background="White" Margin="4,0,10,0" TextAlignment="Right" VerticalAlignment="Center"/>
+        <Button Content="7" Grid.Row="2" Style="{StaticResource DigitBtn}"
+                Command="{Binding DigitPress}" CommandParameter="7"/>
+        <Button Content="4" Grid.Row="3" Style="{StaticResource DigitBtn}"
+                Command="{Binding DigitPress}" CommandParameter="4"/>
+        <Button Content="1" Grid.Row="4" Style="{StaticResource DigitBtn}"
+                Command="{Binding DigitPress}" CommandParameter="1"/>
+        <Button Content="8" Grid.Row="2" Grid.Column="1" Style="{StaticResource DigitBtn}"
+                Command="{Binding DigitPress}" CommandParameter="8"/>
+        <Button Content="9" Grid.Row="2" Grid.Column="2" Style="{StaticResource DigitBtn}"
+                Command="{Binding DigitPress}" CommandParameter="9"/>
+        <Button Content="5" Grid.Row="3" Grid.Column="1" Style="{StaticResource DigitBtn}"
+                Command="{Binding DigitPress}" CommandParameter="5"/>
+        <Button Content="6" Grid.Row="3" Grid.Column="2" Style="{StaticResource DigitBtn}"
+                Command="{Binding DigitPress}" CommandParameter="6"/>
+        <Button Content="2" Grid.Row="4" Grid.Column="1" Style="{StaticResource DigitBtn}"
+                Command="{Binding DigitPress}" CommandParameter="2"/>
+        <Button Content="3" Grid.Row="4" Grid.Column="2" Style="{StaticResource DigitBtn}"
+                Command="{Binding DigitPress}" CommandParameter="3"/>
+        <Button Content="0" Grid.Row="5" Grid.Column="1" Style="{StaticResource DigitBtn}"
+                Command="{Binding DigitPress}" CommandParameter="0"/>
+        <Button Content="⌫" Grid.Row="0" Grid.Column="3" Style="{StaticResource DigitBtn}"
+                Command="{Binding Backspace}"/>
+        <Button Content="C" Grid.Row="0" Grid.Column="4" Style="{StaticResource DigitBtn}"/>
+        <Button Content="+/-" Grid.Row="5" Grid.Column="0" Style="{StaticResource DigitBtn}"
+                Command="{Binding PlusMinus}"/>
+        <Button Content="{Binding Dot}" Grid.Row="5" Grid.Column="2" Style="{StaticResource DigitBtn}"
+                Command="{Binding DotPress}"/>
+        <Button Content="=" Grid.Row="5" Grid.Column="3" Style="{StaticResource DigitBtn}"/>
+        <Button Content="+" Grid.Row="2" Grid.Column="3" Style="{StaticResource DigitBtn}"
+                Command="{Binding Operation}" CommandParameter="+"/>
+        <Button Content="-" Grid.Row="2" Grid.Column="4" Style="{StaticResource DigitBtn}"
+                Command="{Binding Operation}" CommandParameter="-"/>
+        <Button Content="*" Grid.Row="3" Grid.Column="3" Style="{StaticResource DigitBtn}"
+                Command="{Binding Operation}" CommandParameter="*"/>
+        <Button Content="/" Grid.Row="3" Grid.Column="4" Style="{StaticResource DigitBtn}"
+                Command="{Binding Operation}" CommandParameter="/"/>
+        <Button Content="√" Grid.Row="4" Grid.Column="3" Style="{StaticResource DigitBtn}"
+                Command="{Binding Operation}" CommandParameter="√"/>
+
+
     </Grid>
 </Window>

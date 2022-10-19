@@ -10,18 +10,18 @@ namespace CalculationModule
         public string SecondOperand { get; set; } = string.Empty;
         public string Operation { get; set; } = string.Empty;
         public string Result { get; protected set; } = string.Empty;
-        private bool isAtomar;
+        public bool IsAtomar { get; private set; }
         public Calculations() { }
         public Calculations(string firstOperand, string secondOperand, string operation) 
         {
             CheckOperation(operation);
             CheckOperand(firstOperand);
-            if (!isAtomar) CheckOperand(secondOperand);
+            if (!IsAtomar) CheckOperand(secondOperand);
           
             
 
             FirstOperand = firstOperand;
-            if (!isAtomar) SecondOperand = secondOperand;
+            if (!IsAtomar) SecondOperand = secondOperand;
             Operation = operation;
         }
 
@@ -29,7 +29,7 @@ namespace CalculationModule
         {
             CheckOperation(Operation);
             CheckOperand(FirstOperand);
-            if(!isAtomar) CheckOperand(SecondOperand);
+            if(!IsAtomar) CheckOperand(SecondOperand);
 
 
 
@@ -56,7 +56,7 @@ namespace CalculationModule
 
                         Result = (Convert.ToDouble(FirstOperand) + secondOperand).ToString();
                         break;
-                    case "sqrt":
+                    case "√":
                         Double firstOperand = Convert.ToDouble(FirstOperand);
                         if (firstOperand < 0)
                         {
@@ -81,10 +81,10 @@ namespace CalculationModule
                 case "-":
                 case "*":
                 case "/":
-                    isAtomar = false;
+                    IsAtomar = false;
                     break;
-                case "sqrt":
-                    isAtomar = true;
+                case "√":
+                    IsAtomar = true;
                     break;
                 default:
                     Result = "Operation Error";
