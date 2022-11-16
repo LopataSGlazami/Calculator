@@ -5,66 +5,88 @@ using System.Windows.Input;
 
 namespace ViewModels
 {
+    public interface IErrorHundler
+    {
+        void ErrorHundle(Exception e);
+    }
     public class Command : ICommand
     {
+        public IErrorHundler ErrorHundler { get; set; }
         private readonly Action action;
 
-        public Command(Action action, Func<bool>? canExecute = null)
+        public Command(Action action, Func<bool> canExecute = null, IErrorHundler errorHundler=null)
         {
+            ErrorHundler = errorHundler;
             this.action = action;
             this.canExecute = canExecute;
         }
 
-        private readonly Func<bool>? canExecute;
+        private readonly Func<bool> canExecute;
 
-        public event EventHandler? CanExecuteChanged;
+        public event EventHandler CanExecuteChanged;
 
-        public bool CanExecute(object? _)
+        public void RaiseCanExecuteChanged()
+        {
+            CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+
+
+        public bool CanExecute(object _)
         {
             return canExecute == null ? true : canExecute();
         }
 
-        public void Execute(object? _)
+        public void Execute(object _)
         {
-            if (CanExecute(null)) action.Invoke();
-            RaiseCanExecuteChanged();
+            if (CanExecute(null))
+            {
+                try
+                {
+                    action.Invoke();
+                }
+                catch(Exception e)
+                {
+                    if(ErrorHundler!=null)
+                    {
+                        ErrorHundler.ErrorHundle(e);
+                    }
+                }
+            }
         }
-
-        public void RaiseCanExecuteChanged()
-        {
-            CanExecuteChanged?.Invoke(this, EventArgs.Empty);
-        }
-            
     }
-
-    public class Command<T> : ICommand
+    public class Command <T>: ICommand
     {
         private readonly Action<T> action;
 
-        public Command(Action<T> action, Func<T, bool>? canExecute = null)
+        public Command(Action<T> action, Func<T,bool> canExecute = null)
         {
             this.action = action;
             this.canExecute = canExecute;
         }
 
-        private readonly Func<T, bool>? canExecute;
+        private readonly Func<T,bool> canExecute;
 
-        public event EventHandler? CanExecuteChanged;
-
-        public bool CanExecute(object? param)
-        {
-            return canExecute == null || canExecute((T)param);
-        }
-
-        public void Execute(object? param)
-        {
-            action.Invoke((T)param);
-        }
+        public event EventHandler CanExecuteChanged;
 
         public void RaiseCanExecuteChanged()
         {
             CanExecuteChanged?.Invoke(this, EventArgs.Empty);
         }
 
+
+
+        public bool CanExecute(object param)
+        {
+            return canExecute == null ? true : canExecute((T)param);
+        }
+
+        public void Execute(object param)
+        {
+            if (CanExecute(param))
+            {
+                action.Invoke((T)param);
+            }
+        }
     }
 }

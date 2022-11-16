@@ -12,8 +12,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-
-namespace View.Calculator
+using System.Globalization;
+using ViewModels;
+namespace Calculator.Wpf
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -22,12 +23,10 @@ namespace View.Calculator
     {
         public MainWindow()
         {
+            
             InitializeComponent();
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-
+            DataContext = new MainViewModel(new ErrorHundler());
+            
         }
     }
 }

@@ -2,100 +2,196 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Globalization;
-using CalculationModule;
+using CalculationsModel;
 
 namespace ViewModels
 {
-   public class MainViewModel:ViewModelBase
+    public class MainViewModel : ViewModelBase
     {
-        private Calculations calc = new Calculations();
-
-        private string display = "0";
+         Calculations model = new Calculations();
+        
+        string display = "0";
         public string Display
         {
             get => display;
-            private set
+
+            set
             {
+                if (value.Length>18)
+                {
+                    value = value.Remove(18);
+                }
                 display = value;
                 OnPropertyChanged("Display");
+                BackSpace.RaiseCanExecuteChanged();
                 DotPress.RaiseCanExecuteChanged();
-                Backspace.RaiseCanExecuteChanged();
             }
+
         }
 
-        private string info = "";
+        void SetInfo()
+        {
+            if(string.IsNullOrEmpty(lastOperation))
+            {
+                Info = Display;
+                return;
+            }
+            if(model.IsAtomar)
+            {
+                Info = lastOperation + "(" + display + ")";
+                return;
+            }
+            Info += $" {lastOperation} {display}";
+            Display = "0";
+        }
+
+
+
+        string info = "";
         public string Info
         {
             get => info;
-            private set
+            set
             {
                 info = value;
                 OnPropertyChanged("Info");
+                EqualPress.RaiseCanExecuteChanged();
+
+                
             }
         }
+        string lastOperation = "";
+        string LastOperation
+        {
+            get => lastOperation;
+            set
+            {
+                
+            }
+        }
+
         public string Dot => CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator;
 
-        private string lastOperation = "";
+        public  Command<string> DigitPress { get; }
+        public  Command<string> OperationPress { get; }
+        public  Command BackSpace { get; }
+        public  Command PlusMinus { get; }
+        public  Command DotPress { get; }
+        public  Command EqualPress { get; }
+        public  Command CPress { get; }
 
-        public Command <string> DigitPress { get; }
-        public Command <string> Operation { get; }
-        public Command PlusMinus { get; }
-        public Command DotPress { get; }
-        public Command Backspace { get; }
-        
 
-
-        public MainViewModel()
+        public MainViewModel(IErrorHundler errorHundler)
         {
             DigitPress = new Command<string>(digitPress);
-            PlusMinus = new Command(plusMinus);
-            DotPress = new Command(() => Display += Dot, () => !display.Contains(Dot));
-            Backspace = new Command(backspace, () => display != "0");
-            Operation = new Command<string>(operation);
+            OperationPress = new Command<string>(operationPress);
+            BackSpace = new Command(backSpace, () => Display != "0");
+            PlusMinus = new Command(() =>
+            Display = Display[0] == '-' ? Display.Remove(0, 1) : '-' + Display) ;
+            DotPress = new Command(()=> Display += Dot, ()=> !Display.Contains(Dot));
+            EqualPress = new Command(equalPress, () => lastOperation.Length > 0,errorHundler);
+            CPress = new Command(cPress);
+        }
+
+        private void cPress()
+        {
+            model = new Calculations();
+            lastOperation = "";
+            Info = "";
+            Display = "0";
+        }
+
+        private void equalPress()
+        {
+            if(!model.IsAtomar)
+            {
+                model.SecondOperand = display;
+                Info = model.FirstOperand + " " +model.Operation+ " "+ display;
+            }
             
+            model.Calculate();
+            Info = $"{Info} = {model.Result}";
+            Display = model.Result;
+            lastOperation = "";
+
         }
 
-        private void operation(string obj)
+        private void operationPress(string obj)
         {
-            if (obj == lastOperation) return;
-            bool old = calc.IsAtomar;
-            calc = new Calculations()
+            if(lastOperation==obj)
             {
-                FirstOperand = display,
-                Operation = obj
-            };
-            if (!string.IsNullOrEmpty(lastOperation))
+                return;
+            }
+            if(Info.Contains("="))
             {
-                if (old)
+                Info = display;
+                
+            }
+            var old = lastOperation;
+            bool oldIsAtomar = model.IsAtomar;
+            lastOperation = obj;
+            
+            model = new Calculations(display, "0", obj);
+
+            if (model.IsAtomar)
+            {
+                if(oldIsAtomar)
                 {
-                    if (calc.IsAtomar) Info = info.Replace(lastOperation, obj);
-                    else Info = info.Remove(0, info.IndexOf('(')).TrimEnd(')');
-                    lastOperation = obj;
+                    Info = Info.Replace(old, model.Operation);
+                    Display = "0";
+                    return;
                 }
+                if(string.IsNullOrEmpty (old))
+                {
+                    Info = $"{model.Operation}({display})";
+                    Display = "0";
+                    return;
+                }
+                Info = model.Operation+ "("+Info.Replace(old, "").TrimEnd() + ")";
+                Display = "0";
+                return;
+
             }
-        }
-
-        private void backspace()
-        {
-            if (display == "-0") Display = "0";
-            else if (display[0] == '-' && display.Length == 2 || display.Length == 1) Display = display.Remove(display.Length - 1) + "0";
-            else Display = display.Remove(display.Length - 1);
-        }
-
-        private void plusMinus()
-        {
-            if (display[0] == '-') Display = display.Remove(0, 1);
-            else Display = "-" + display;
-        }
-
-
-        private void digitPress(string digit)
-        {
-            if (display == "0" || display == "-0")
+            if (string.IsNullOrEmpty(old))
             {
-                Display = display.Replace("0", digit);
+                Info = display + " " + model.Operation;
+                Display = "0";
+                return;
             }
-            else Display = display + digit;
+            if(oldIsAtomar)
+            {
+                Info = Info.Replace(old, "").Trim('(', ')')+" "+ model.Operation;
+                Display = "0";
+                return;
+            }
+            
+            Info = Info.Replace(old, "").Trim() + " " + model.Operation;
+            Display = "0";
+
+        }
+
+        private void backSpace()
+        {
+            if (Display == "-0" ||
+                (Display[0] == '-' && Display.Length == 2) ||
+                Display.Length == 1)
+            {
+                Display = "0";
+                return;
+            }
+            Display = Display.Remove(Display.Length - 1);    
+        }
+
+        private void digitPress(string obj)
+        {
+            if(Display=="0" || Display=="-0")
+            {
+                Display = Display.Trim('0') + obj;
+            }
+            else
+            {
+                Display = Display + obj;
+            }
         }
     }
 }
