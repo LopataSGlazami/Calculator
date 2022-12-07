@@ -1,20 +1,26 @@
-﻿using System;
+﻿using CalculationsModel;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace DataModels.Entities
 {
-    public class History
+    public class History : EntityBase
     {
-        public Guid Id { get; set; }
-        public DateTime ActDate { get; set; } = DateTime.Now;
-        public bool IsAdmin { get; set; }
-        public Guid CalculationId { get; set; }
-        public Calculation Calculation { get; set; } = null!;
+        public string FirstOperand { get; set; } = "";
+        public string Operation { get; set; } = "";
+        public string Result { get; set; } = "";
+        public string? SecondOperand { get; set; }
+
+        public Guid UserId { get; set; }
+
+        public User User { get; set; } = null!;
 
         public override string ToString()
         {
-            return Calculation.ToString();
+            return string.IsNullOrWhiteSpace(SecondOperand)
+                ? $"{Operation}({FirstOperand}) = {Result}"
+                : $"{FirstOperand} {Operation} {SecondOperand} = {Result}";
         }
     }
 }

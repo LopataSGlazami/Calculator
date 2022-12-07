@@ -1,0 +1,36 @@
+﻿<Page x:Class="Calculator.Wpf.Pages.Login"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Calculator.Wpf.Pages"
+      xmlns:dvm="clr-namespace:ViewModels;assembly=ViewModels"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="450"
+      Title="Login">
+    <Page.DataContext>
+        <dvm:DataViewModel/>
+    </Page.DataContext>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0.35*"/>
+            <ColumnDefinition Width="0.30*"/>
+            <ColumnDefinition Width="0.35*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.28*"/>
+            <RowDefinition Height="0.38*"/>
+            <RowDefinition Height="0.34*"/>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Vertical">
+            <Label Content="Имя пользователя:"/>
+            <ComboBox  Height="{Binding ElementName=PassBox, Path=Height}"
+                       ItemsSource="{Binding Names}" SelectedItem="{Binding SelectedName}"/>
+            <Label Content="Пароль:"/>
+            <PasswordBox x:Name="PassBox" PasswordChanged="PassBox_PasswordChanged"/>
+            <CheckBox Content="Запомнить меня" />
+            <Button Content="Войти" Margin="0,4,0,0"/>
+            <Button Content="Регистрация" Click="Button_Click"/>
+        </StackPanel>
+    </Grid>
+</Page>

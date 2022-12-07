@@ -3,13 +3,16 @@ using System.Collections.Generic;
 using System.Text;
 using System.Globalization;
 using CalculationsModel;
+using DataModels;
 
 namespace ViewModels
 {
     public class MainViewModel : ViewModelBase
     {
-         Calculations model = new Calculations();
-        
+        private Calculations model = new Calculations();
+        internal static readonly DataManager Data = DataManager.Get(DataProvider.SqLite);
+        public static IErrorHundler? ErrorHundler { internal get; set; }
+
         string display = "0";
         public string Display
         {
@@ -45,8 +48,6 @@ namespace ViewModels
             Display = "0";
         }
 
-
-
         string info = "";
         public string Info
         {
@@ -81,7 +82,7 @@ namespace ViewModels
         public  Command CPress { get; }
 
 
-        public MainViewModel(IErrorHundler errorHundler)
+        public MainViewModel()
         {
             DigitPress = new Command<string>(digitPress);
             OperationPress = new Command<string>(operationPress);
@@ -89,7 +90,7 @@ namespace ViewModels
             PlusMinus = new Command(() =>
             Display = Display[0] == '-' ? Display.Remove(0, 1) : '-' + Display) ;
             DotPress = new Command(()=> Display += Dot, ()=> !Display.Contains(Dot));
-            EqualPress = new Command(equalPress, () => lastOperation.Length > 0,errorHundler);
+            EqualPress = new Command(equalPress, () => lastOperation.Length > 0, ErrorHundler!);
             CPress = new Command(cPress);
         }
 
