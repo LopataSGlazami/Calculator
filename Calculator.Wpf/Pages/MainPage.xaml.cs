@@ -44,12 +44,12 @@ namespace Calculator.Wpf.Pages
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            new HistoryWindow(id).ShowDialog();
+            new HistoryWindow().ShowDialog();
         }
 
         private void Exit_Button_Click(object sender, RoutedEventArgs e)
         {
-            MainWindow.Login(win);
+            win.MainFrame.Navigate(MainWindow.Login(win));
         }
     }
 }

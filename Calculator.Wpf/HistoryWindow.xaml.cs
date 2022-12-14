@@ -18,10 +18,10 @@ namespace Calculator.Wpf
     /// </summary>
     public partial class HistoryWindow : Window
     {
-        public HistoryWindow(Guid id)
+        public HistoryWindow()
         {
             InitializeComponent();
-            DataContext = new HistoryViewModel(id);
+            DataContext = new HistoryViewModel();
         }
     }
 }

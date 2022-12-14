@@ -37,12 +37,21 @@ namespace Calculator.Wpf.Pages
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            win.MainFrame.Navigate(MainWindow.Regin(win));
+            try
+            {
+                noPass = false;
+                win.MainFrame.Navigate(MainWindow.Regin(win));
+            }
+            finally
+            {
+                noPass = true;
+            }
         }
 
+        bool noPass = true;
         private void PassBox_PasswordChanged(object sender, RoutedEventArgs e)
         {
-            model.Pass = PassBox.Password;
+            if(noPass) model.Pass = PassBox.Password;
         }
     }
 }

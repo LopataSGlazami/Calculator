@@ -20,8 +20,7 @@ namespace DataModels.Entities
 
         public static string ToHashString(string pass)
         {
-            if (string.IsNullOrWhiteSpace(pass))
-                throw new ArgumentNullException(nameof(pass));
+            if (string.IsNullOrWhiteSpace(pass)) return "";
             using SHA1 hash = SHA1.Create();
             return string
                 .Concat(hash.ComputeHash(Encoding.UTF8.GetBytes(pass))

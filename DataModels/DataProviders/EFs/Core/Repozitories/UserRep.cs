@@ -34,9 +34,18 @@ namespace DataModels.DataProviders.EFs.Core.Repozitories
             var old = await context.Users.FindAsync(item.Id);
             if (old != null)
             {
-                context.Users.Remove(old);
+                if(item.Nick!=old.Nick)
+                {
+                    old.Nick = item.Nick;
+                }
+
+                if (item.RememberMe!= old.RememberMe)
+                {
+                    old.RememberMe = item.RememberMe;
+                }
+                context.Users.Update(old);
             }
-            context.Users.Add(item);
+            else context.Users.Add(item);
             await context.SaveChangesAsync();
         }
     }

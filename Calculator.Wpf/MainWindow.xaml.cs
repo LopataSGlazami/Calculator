@@ -66,20 +66,7 @@ namespace Calculator.Wpf
         {
             MainViewModel.ErrorHundler = new ErrorHundler();
             InitializeComponent();
-            OpenPage(WorkPage.Login);
-        }
-
-        private void OpenPage(WorkPage page)
-        {
-            switch (page)
-            {
-                case WorkPage.Main:
-                    MainFrame.Navigate(new MainPage(this));
-                    break;
-                case WorkPage.Login:
-                    MainFrame.Navigate(Login(this));
-                    break;
-            }
+            MainFrame.Navigate(Login(this));
         }
     }
 }

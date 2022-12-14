@@ -20,6 +20,7 @@ namespace ViewModels
         public ObservableCollection<string> Names { get; }
 
         public CommandAsync ReginAsync { get; }
+        public CommandAsync RememberAsync { get; }
         public Command Login { get; }
         public static Guid SelectedId { get; set; }
 
@@ -37,10 +38,42 @@ namespace ViewModels
                         .FirstOrDefault()
                         .LastTime
                 })
+                .OrderByDescending(h => h.LastTime)
                 .Select(s => s.Nick));
             ReginAsync = new CommandAsync(reginAsync, canExecuteReginAsync, MainViewModel.ErrorHundler);
             Login = new Command(login, canExecuteLogin, MainViewModel.ErrorHundler);
             SelectedName = User.GuestNick;
+            RememberAsync = new CommandAsync(rememberAsync, errorHundler: MainViewModel.ErrorHundler);
+        }
+
+        private async Task rememberAsync()
+        {
+            var suser = await model.UserRep.GetItemByIdAsync(SelectedId);
+            if (isRemember)
+            {
+                await Task.Run(async () =>
+                {
+                    foreach (var user in model.UserRep.Users)
+                    {
+                        if (user.Id == SelectedId)
+                        {
+                            user.RememberMe = true;
+                            await model.UserRep.UpdateAsync(user);
+                        }
+                        else if (user.RememberMe)
+                        {
+                            user.RememberMe = false;
+                            await model.UserRep.UpdateAsync(user);
+                        }
+                    }
+                });
+            }
+            else
+            {
+                suser!.RememberMe = false;
+                await model.UserRep.UpdateAsync(suser);
+            }
+
         }
 
         private void login()
@@ -56,7 +89,7 @@ namespace ViewModels
                 SelectedId = User.GustGuid;
                 return true;
             }
-            var user = model.UserRep.Users.FirstOrDefault(y => y.Nick == SelectedName).Authorization;
+            var user = model.UserRep.Users.Include(u => u.Authorization).FirstOrDefault(y => y.Nick == SelectedName)?.Authorization;
             if (user != null) SelectedId = user.UserId;
             return pass != null && user != null && user.Password == Authorization.ToHashString(pass);
         }
@@ -98,6 +131,7 @@ namespace ViewModels
                 selectedName = value.Trim();
                 OnPropertyChanged("SelectedName");
                 ReginAsync.RaiseCanExecuteChanged();
+                Login.RaiseCanExecuteChanged();
             }
         }
 
@@ -110,6 +144,7 @@ namespace ViewModels
                 pass = value?.Trim();
                 OnPropertyChanged("Pass");
                 ReginAsync.RaiseCanExecuteChanged();
+                Login.RaiseCanExecuteChanged();
             }
         }
 
@@ -122,6 +157,18 @@ namespace ViewModels
                 confPass = value?.Trim();
                 OnPropertyChanged("Pass");
                 ReginAsync.RaiseCanExecuteChanged();
+            }
+        }
+
+        private bool isRemember;
+        public bool IsRemember
+        {
+            get => isRemember;
+            set
+            {
+                if (isRemember == value) return;
+                isRemember = value;
+                OnPropertyChanged("IsRemember");
             }
         }
     }

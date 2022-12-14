@@ -10,10 +10,10 @@ namespace ViewModels
     {
         public ObservableCollection<String> Histories{ get; }
         
-        public HistoryViewModel(Guid id)
+        public HistoryViewModel()
         {
             Histories = new ObservableCollection<string>();
-            var history = MainViewModel.Data.HistoryRep.Histories.Where(h => h.UserId == id);
+            var history = MainViewModel.Data.HistoryRep.Histories.Where(h => h.UserId == DataViewModel.SelectedId).OrderByDescending(h => h.LastTime);
             if (history == null || !history.Any())
                 Histories.Add("pusto");
             else

@@ -6,6 +6,7 @@ using CalculationsModel;
 using DataModels;
 using DataModels.Entities;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 
 namespace ViewModels
 {
@@ -67,14 +68,6 @@ namespace ViewModels
             }
         }
         string lastOperation = "";
-        string LastOperation
-        {
-            get => lastOperation;
-            set
-            {
-                
-            }
-        }
 
         public string Dot => CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator;
 
@@ -82,8 +75,8 @@ namespace ViewModels
         public  Command<string> OperationPress { get; }
         public  Command BackSpace { get; }
         public  Command PlusMinus { get; }
-        public  Command DotPress { get; }
-        public  Command EqualPress { get; }
+        public Command DotPress { get; }
+        public CommandAsync EqualPress { get; }
         public  Command CPress { get; }
 
 
@@ -95,7 +88,7 @@ namespace ViewModels
             PlusMinus = new Command(() =>
             Display = Display[0] == '-' ? Display.Remove(0, 1) : '-' + Display) ;
             DotPress = new Command(()=> Display += Dot, ()=> !Display.Contains(Dot));
-            EqualPress = new Command(equalPress, () => lastOperation.Length > 0, ErrorHundler!);
+            EqualPress = new CommandAsync(equalPress, () => lastOperation.Length > 0, ErrorHundler!);
             CPress = new Command(cPress);
         }
 
@@ -107,17 +100,21 @@ namespace ViewModels
             Display = "0";
         }
 
-        private void equalPress()
+        private async Task equalPress()
         {
+            History history = new History();
             if(!model.IsAtomar)
             {
-                model.SecondOperand = display;
+               history.SecondOperand = model.SecondOperand = display;
                 Info = model.FirstOperand + " " +model.Operation+ " "+ display;
             }
-            
+            history.FirstOperand = model.FirstOperand;
+            history.Operation = model.Operation;
             model.Calculate();
             Info = $"{Info} = {model.Result}";
-            Display = model.Result;
+            history.Result = Display = model.Result;
+            history.UserId = DataViewModel.SelectedId;
+            await Data.HistoryRep.UpdateAsync(history);
             lastOperation = "";
 
         }
