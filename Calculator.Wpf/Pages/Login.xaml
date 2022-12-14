@@ -8,9 +8,6 @@
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="450"
       Title="Login">
-    <Page.DataContext>
-        <dvm:DataViewModel/>
-    </Page.DataContext>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="0.35*"/>
@@ -29,7 +26,7 @@
             <Label Content="Пароль:"/>
             <PasswordBox x:Name="PassBox" PasswordChanged="PassBox_PasswordChanged"/>
             <CheckBox Content="Запомнить меня" />
-            <Button Content="Войти" Margin="0,4,0,0"/>
+            <Button Content="Войти" Margin="0,4,0,0" Command=""/>
             <Button Content="Регистрация" Click="Button_Click"/>
         </StackPanel>
     </Grid>

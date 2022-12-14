@@ -25,6 +25,7 @@ namespace Calculator.Wpf.Pages
         public Login(MainWindow win, string nick = "")
         {
             InitializeComponent();
+            DataContext = MainWindow.Data;
             this.win = win;
             if (DataContext is DataViewModel model)
             {
@@ -36,8 +37,7 @@ namespace Calculator.Wpf.Pages
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            if (MainWindow.Regin is null) MainWindow.Regin = new Regin(win);
-            win.MainFrame.Navigate(MainWindow.Regin);
+            win.MainFrame.Navigate(MainWindow.Regin(win));
         }
 
         private void PassBox_PasswordChanged(object sender, RoutedEventArgs e)

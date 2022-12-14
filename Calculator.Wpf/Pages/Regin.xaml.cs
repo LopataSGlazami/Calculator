@@ -25,13 +25,9 @@ namespace Calculator.Wpf.Pages
         public Regin(MainWindow win)
         {
             InitializeComponent();
+            DataContext = MainWindow.Data;
             this.win = win;
-            if (DataContext is DataViewModel model)
-            {
-                this.model = model;
-                DataViewModel.ReginOk.Action = () => win.MainFrame.Navigate(MainWindow.Login!);
-            }
-            else throw new Exception();
+            if (DataContext is DataViewModel model) this.model = model;
         }
 
         private void PassBox_PasswordChanged(object sender, RoutedEventArgs e) => model.Pass = PassBox.Password;

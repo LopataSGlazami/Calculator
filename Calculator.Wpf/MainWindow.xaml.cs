@@ -23,8 +23,41 @@ namespace Calculator.Wpf
     /// </summary>
     public partial class MainWindow : Window
     {
-        public static Login Login;
-        public static Regin Regin;
+        private static MainPage mainPage;
+        public static MainPage MainPage(MainWindow main) => mainPage == null ? new MainPage(main) : mainPage;
+
+        private static Login login;
+        public static Login Login(MainWindow main)
+        {
+            if (login == null)
+            {
+                login = new Login(main);
+                Data.LoginOk = () => main.MainFrame.Navigate(MainPage(main));
+            }
+            return login;
+        }
+
+        private static Regin regin;
+        public static Regin Regin(MainWindow win)
+        {
+            if (regin == null)
+            {
+                regin = new Regin(win);
+                Data.ReginOk = () =>
+                    win.MainFrame.Navigate(Login(win));
+            }
+            return regin;
+        }
+
+        private static DataViewModel data;
+        public static DataViewModel Data
+        {
+            get
+            {
+                data = data ?? new DataViewModel();
+                return data;
+            }
+        }
 
         public MainWindow()
         {
@@ -41,8 +74,7 @@ namespace Calculator.Wpf
                     MainFrame.Navigate(new MainPage(this));
                     break;
                 case WorkPage.Login:
-                    if (Login is null) Login = new Login(this);
-                    MainFrame.Navigate(Login);
+                    MainFrame.Navigate(Login(this));
                     break;
             }
         }

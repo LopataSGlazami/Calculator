@@ -12,8 +12,8 @@ namespace ViewModels
 {
     public class DataViewModel:ViewModelBase
     {
-        public static IAfterWorkAction? ReginOk { internal get; set; }
-        public static IAfterWorkAction? LoginOk { internal get; set; }
+        public Action? ReginOk { private get; set; }
+        public Action? LoginOk { private get; set; }
 
         private readonly DataManager model = MainViewModel.Data;
         private readonly ObservableCollection<User> users;
@@ -31,7 +31,9 @@ namespace ViewModels
                 .Select(u => new
                 {
                     u.Nick,
-                    u.Histories.OrderByDescending(h => h.LastTime).FirstOrDefault().LastTime
+                    u.Histories
+                        .FirstOrDefault()
+                        .LastTime
                 })
                 .Select(s => s.Nick));
             ReginAsync = new CommandAsync(reginAsync, canExecuteReginAsync, MainViewModel.ErrorHundler);
@@ -61,9 +63,9 @@ namespace ViewModels
             };
 
             await model.UserRep.UpdateAsync(user);
-            ReginAsync.RaiseCanExecuteChanged();
+            Names.Add(SelectedName);
             Pass = "";
-            ReginOk?.Action?.Invoke();
+            ReginOk?.Invoke();
         }
 
         private string? selectedName;

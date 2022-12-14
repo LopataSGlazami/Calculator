@@ -21,7 +21,7 @@ namespace Calculator.Wpf.Pages
     public partial class MainPage : Page
     {
         private readonly MainWindow win;
-        public MainPage(MainWindow win)
+        public MainPage(MainWindow win, Guid? userId = null)
         {
             InitializeComponent();
             this.win = win;

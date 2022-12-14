@@ -10,11 +10,6 @@ namespace ViewModels
         void ErrorHundle(Exception e);
     }
 
-    public static class AfterWorkAction
-    {
-        public static Action? Action { internal get; set; }
-    }
-
     public class Command : ICommand
     {
         public IErrorHundler? ErrorHundler { get; set; }

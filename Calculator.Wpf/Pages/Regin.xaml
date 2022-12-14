@@ -8,9 +8,6 @@
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="450" 
       Title="Regin">
-    <Page.DataContext>
-        <dvm:DataViewModel/>
-    </Page.DataContext>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="0.35*"/>

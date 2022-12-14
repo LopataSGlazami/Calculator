@@ -9,8 +9,9 @@ namespace ViewModels
 {
     public class MainViewModel : ViewModelBase
     {
-        private Calculations model = new Calculations();
         internal static readonly DataManager Data = DataManager.Get(DataProvider.SqLite);
+
+        private Calculations model = new Calculations();
         public static IErrorHundler? ErrorHundler { internal get; set; }
 
         string display = "0";
