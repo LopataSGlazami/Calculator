@@ -4,6 +4,8 @@ using System.Text;
 using System.Globalization;
 using CalculationsModel;
 using DataModels;
+using DataModels.Entities;
+using System.Collections.ObjectModel;
 
 namespace ViewModels
 {
@@ -32,6 +34,8 @@ namespace ViewModels
             }
 
         }
+         
+
 
         void SetInfo()
         {

@@ -58,6 +58,8 @@
                 Command="{Binding BackSpace}"/>
         <Button Content="C" Grid.Row="1" Grid.Column="4" Style="{StaticResource DigitBtn}"
                 Command="{Binding CPress}"/>
+        <Button Content="h" Grid.Row="0" Grid.Column="4" Style="{StaticResource DigitBtn}" Click="Button_Click"/>
+        <Button Content="leave" Grid.Row="0" Grid.Column="3" Style="{StaticResource DigitBtn}" Click="Exit_Button_Click"/>
         <Button Content="+" Grid.Row="2" Grid.Column="3" Style="{StaticResource DigitBtn}"
                 Command="{Binding OperationPress}" CommandParameter="+"/>
         <Button Content="-" Grid.Row="2" Grid.Column="4" Style="{StaticResource DigitBtn}"

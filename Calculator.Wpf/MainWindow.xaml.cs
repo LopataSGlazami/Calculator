@@ -32,7 +32,10 @@ namespace Calculator.Wpf
             if (login == null)
             {
                 login = new Login(main);
-                Data.LoginOk = () => main.MainFrame.Navigate(MainPage(main));
+                Data.LoginOk = () => 
+                {
+                    main.MainFrame.Navigate(MainPage(main), DataViewModel.SelectedId);
+                };
             }
             return login;
         }

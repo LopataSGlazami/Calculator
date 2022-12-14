@@ -20,6 +20,8 @@ namespace ViewModels
         public ObservableCollection<string> Names { get; }
 
         public CommandAsync ReginAsync { get; }
+        public Command Login { get; }
+        public static Guid SelectedId { get; set; }
 
         public DataViewModel()
         {
@@ -37,7 +39,26 @@ namespace ViewModels
                 })
                 .Select(s => s.Nick));
             ReginAsync = new CommandAsync(reginAsync, canExecuteReginAsync, MainViewModel.ErrorHundler);
+            Login = new Command(login, canExecuteLogin, MainViewModel.ErrorHundler);
             SelectedName = User.GuestNick;
+        }
+
+        private void login()
+        {
+            LoginOk?.Invoke();
+
+        }
+
+        private bool canExecuteLogin()
+        {
+            if (selectedName == User.GuestNick)
+            {
+                SelectedId = User.GustGuid;
+                return true;
+            }
+            var user = model.UserRep.Users.FirstOrDefault(y => y.Nick == SelectedName).Authorization;
+            if (user != null) SelectedId = user.UserId;
+            return pass != null && user != null && user.Password == Authorization.ToHashString(pass);
         }
 
         private bool canExecuteReginAsync()
