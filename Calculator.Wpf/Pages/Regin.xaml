@@ -29,7 +29,8 @@
             <StackPanel Orientation="Horizontal">
                 <Button Content="Регистрация" Margin="0,4,0,0" Width="100"
                         Command="{Binding ReginAsync, UpdateSourceTrigger=PropertyChanged}"/>
-                <Button Content="⮑" Margin="8,4,0,0" FontWeight="Bold" Width="28"/>
+                <Button Content="⮑" Margin="8,4,0,0" FontWeight="Bold" Width="28"
+                        Command="{Binding ReginExit}"/>
             </StackPanel>
             
         </StackPanel>

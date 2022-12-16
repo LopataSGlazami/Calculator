@@ -22,6 +22,7 @@ namespace ViewModels
         public CommandAsync ReginAsync { get; }
         public CommandAsync RememberAsync { get; }
         public Command Login { get; }
+        public Command ReginExit { get; }
         public static Guid SelectedId { get; set; }
 
         public DataViewModel()
@@ -42,6 +43,7 @@ namespace ViewModels
                 .Select(s => s.Nick));
             ReginAsync = new CommandAsync(reginAsync, canExecuteReginAsync, MainViewModel.ErrorHundler);
             Login = new Command(login, canExecuteLogin, MainViewModel.ErrorHundler);
+            ReginExit = new Command(() => ReginOk?.Invoke(), errorHundler: MainViewModel.ErrorHundler);
             SelectedName = User.GuestNick;
             RememberAsync = new CommandAsync(rememberAsync, errorHundler: MainViewModel.ErrorHundler);
         }

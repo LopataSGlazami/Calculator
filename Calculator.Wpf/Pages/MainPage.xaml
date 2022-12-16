@@ -51,7 +51,7 @@
                 Command="{Binding DigitPress}" CommandParameter="3"/>
         <Button Content="+/-" Grid.Row="5" Grid.Column="0" Style="{StaticResource DigitBtn}"
                 Command="{Binding PlusMinus}"/>
-        <Button Content="0" Grid.Row="5" Grid.Column="1" Style="{StaticResource DigitBtn}"/>
+        <Button Content="0" Grid.Row="5" Grid.Column="1" Style="{StaticResource DigitBtn}" Command="{Binding DigitPress}" CommandParameter="0"/>
         <Button Content="{Binding Dot}" Grid.Row="5" Grid.Column="2" Style="{StaticResource DigitBtn}"
                 Command="{Binding DotPress}"/>
         <Button Content="⌫" Grid.Row="1" Grid.Column="3" Style="{StaticResource DigitBtn}"
